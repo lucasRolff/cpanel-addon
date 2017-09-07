@@ -190,6 +190,12 @@ class DomainController extends Zend_Controller_Action
 			SpamFilter_Panel_Cache::set($cacheKey, $domains);
 		}
 
+        foreach($domains as $key => $value) {
+            if($value['type'] == "subdomain") {
+                unset($domains[$key]);
+            }
+        }
+
         // Proceed
         if (!isset($domains)) {
 			$this->_flashMessenger->addMessage(

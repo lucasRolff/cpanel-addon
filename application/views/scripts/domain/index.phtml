@@ -6,6 +6,8 @@
 if (!$this->hasAPIAccess) {
     return;
 }
+
+$panel = new SpamFilter_Panelsupport();
 ?>
 <h3><?php echo $this->t->_('List Domains'); ?></h3>
 <p><?php switch ($this->accesslevel) {
@@ -38,6 +40,7 @@ if (!$this->hasAPIAccess) {
     <tr>
         <th><?php echo $this->t->_('Domainname'); ?></th>
         <th><?php echo $this->t->_('Type'); ?></th>
+        <th>Protected</th>
         <th></th>
     </tr>
     </thead>
@@ -57,12 +60,12 @@ if (!$this->hasAPIAccess) {
         <tr>
             <td><?php echo $idn->decode($domain['domain']); ?></td>
             <td><?php echo $domain['type']; ?></td>
+            <td><?php if($panel->isInFilter($domain['domain'])) { echo '<span class="label label-success">Yes</span>'; } else { echo '<span class="label label-danger">No</span>';} ?></td>
             <td>
             <?php if (in_array($domain['type'], array('subdomain', 'addon', 'parked', 'alias')) && 0 < $this->settings->add_extra_alias) : ?>
             Login
             <?php else : ?>
-            <a href="<?php echo $this->baseFile; ?>?q=domain/login/domain/<?php echo $domain['domain']; ?>/type/<?php echo $domain['type']; ?><?php echo $owner_domain; ?><?php echo $owner_user; ?>"
-               target="_blank">Login</a>
+            <a href="<?php echo $this->baseFile; ?>?q=domain/login/domain/<?php echo $domain['domain']; ?>/type/<?php echo $domain['type']; ?><?php echo $owner_domain; ?><?php echo $owner_user; ?>" target="_blank"><?php if($panel->isInFilter($domain['domain'])) { echo "Login"; } else { echo "Activate";} ?></a>
             <?php endif; ?></td>
         </tr>
             <?php
